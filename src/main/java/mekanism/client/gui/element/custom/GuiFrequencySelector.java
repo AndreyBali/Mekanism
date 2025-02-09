@@ -87,8 +87,9 @@ public class GuiFrequencySelector<FREQ extends Frequency> extends GuiElement {
         setButton = addChild(new TranslationButton(frequencySelector, relativeX, relativeY + 113, buttonWidth, 18, MekanismLang.BUTTON_SET, (element, mouseX, mouseY) -> {
             int selection = this.scrollList.getSelection();
             if (selection != -1) {
-                Frequency frequency = getFrequencies().get(selection);
+                FREQ frequency = getFrequencies().get(selection);
                 setFrequency(frequency.getName(), frequency.getOwner());
+                frequencySelector.setFrequency(frequency);
             }
             //Note: We update the buttons regardless so that if something went wrong, and we don't have a selection
             // we will disable the ability to press the set button
@@ -246,6 +247,8 @@ public class GuiFrequencySelector<FREQ extends Frequency> extends GuiElement {
         @Nullable
         FREQ getFrequency();
 
+        void setFrequency(FREQ freq);
+
         List<FREQ> getPublicFrequencies();
 
         List<FREQ> getTrustedFrequencies();
@@ -290,6 +293,8 @@ public class GuiFrequencySelector<FREQ extends Frequency> extends GuiElement {
             return getTileEntity().getFrequency(getFrequencyType());
         }
 
+        default void setFrequency(FREQ freq) {}
+
         @Override
         default List<FREQ> getPublicFrequencies() {
             return getTileEntity().getPublicCache(getFrequencyType());
@@ -328,6 +333,10 @@ public class GuiFrequencySelector<FREQ extends Frequency> extends GuiElement {
         @Override
         default FREQ getFrequency() {
             return getFrequencyContainer().getFrequency();
+        }
+
+        default void setFrequency(FREQ freq) {
+            getFrequencyContainer().setFrequency(freq);
         }
 
         @Override
